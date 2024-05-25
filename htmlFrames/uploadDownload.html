@@ -84,10 +84,27 @@ Cleaned and Prepared - July 2016
   *
   */
   function uploadFile() {
-    // pass the file handler
-    parent.uploadClicked(fp.files);
-    // clean the file
-    fp.files = null;
+    // Get the file input element
+    var fp = document.getElementById("file-upload1");
+    // First, we need to check if files are selected
+    if (fp.files.length > 0) {
+      // Pass the file handler to the parent function
+      parent.uploadClicked(fp.files);
+
+      // Reset the file input by creating a new input element and replacing the old one
+      // It is not a good idea to assign fp.files to null as it was done in the original function; 
+      // the solution is to reset the file input to handle any dynamic behavior.
+      var newInput = document.createElement('input');
+      newInput.type = 'file';
+      newInput.id = fp.id;
+      newInput.name = fp.name;
+      // Retaining the onchange event if any
+      newInput.onchange = fp.onchange;
+      fp.parentNode.replaceChild(newInput, fp);
+      // else notify the use that no file was selected
+    } else {
+      console.log("No files selected please try again.");
+    }
   } // end uploadFile()
 
   //this function triggers a download of the current data
